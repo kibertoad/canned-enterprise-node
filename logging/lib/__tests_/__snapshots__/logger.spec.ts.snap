@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`logger Logs ERROR level entry with error 1`] = `
+"[2011-10-05 14:48:00.000 +0000] [31mERROR[39m: [36mDummy error message[39m
+    productId: \\"dummyId\\"
+    requestId: \\"dummyId\\"
+    errLog: {
+      \\"additionalFields\\": {
+        \\"productId\\": \\"dummyId\\"
+      }
+    }
+"
+`;
+
+exports[`logger Logs ERROR level entry with error data 1`] = `
+"[2011-10-05 14:48:00.000 +0000] [31mERROR[39m: [36mDummy error message[39m
+    productId: \\"dummyId\\"
+    requestId: \\"dummyId\\"
+    errLog: {}
+"
+`;
+
+exports[`logger Logs WARN level entry with error data 1`] = `
+"[2011-10-05 14:48:00.000 +0000] [33mWARN [39m: [36mDummy error message[39m
+    productId: \\"dummyId\\"
+    requestId: \\"dummyId\\"
+"
+`;
+
+exports[`logger Supports overriding childLogger base values 1`] = `
+"[2011-10-05 14:48:00.000 +0000] [32mINFO [39m: [36mdummy2[39m
+    serviceId: \\"xyz\\"
+"
+`;
+
+exports[`logger Supports setting requestId in childLogger 1`] = `
+"[2011-10-05 14:48:00.000 +0000] [32mINFO [39m: [36mdummy[39m
+    requestId: \\"abc\\"
+"
+`;
+
+exports[`logger logs DEBUG level entry with context data 1`] = `
+"[2011-10-05 14:48:00.000 +0000] [34mDEBUG[39m: [36mRequest-header validation passed.[39m
+    originalHost: \\"localhost\\"
+    requestId: \\"dummyId\\"
+"
+`;
+
+exports[`logger logs INFO level entry 1`] = `
+"[2011-10-05 14:48:00.000 +0000] [32mINFO [39m: [36mDummy text[39m
+    requestId: \\"dummy\\"
+"
+`;
