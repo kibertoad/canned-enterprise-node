@@ -1,0 +1,201 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`config feature toggle values are correct: Features for development: mainbrand RU 1`] = `
+Object {
+  "GLOBAL_FEATURE": false,
+}
+`;
+
+exports[`config feature toggle values are correct: Features for development: mainbrand US 1`] = `
+Object {
+  "GLOBAL_FEATURE": false,
+}
+`;
+
+exports[`config feature toggle values are correct: Features for development: otherbrand RU 1`] = `
+Object {
+  "GLOBAL_FEATURE": true,
+}
+`;
+
+exports[`config feature toggle values are correct: Features for development: otherbrand US 1`] = `
+Object {
+  "GLOBAL_FEATURE": true,
+}
+`;
+
+exports[`config feature toggle values are correct: Features for production: mainbrand RU 1`] = `
+Object {
+  "GLOBAL_FEATURE": false,
+}
+`;
+
+exports[`config feature toggle values are correct: Features for production: mainbrand US 1`] = `
+Object {
+  "GLOBAL_FEATURE": false,
+}
+`;
+
+exports[`config feature toggle values are correct: Features for production: otherbrand RU 1`] = `
+Object {
+  "GLOBAL_FEATURE": true,
+}
+`;
+
+exports[`config feature toggle values are correct: Features for production: otherbrand US 1`] = `
+Object {
+  "GLOBAL_FEATURE": true,
+}
+`;
+
+exports[`config feature toggle values are correct: Features for staging: mainbrand RU 1`] = `
+Object {
+  "GLOBAL_FEATURE": true,
+  "moduleOne": Object {
+    "SOME_FEATURE": true,
+  },
+  "moduleTwo": Object {
+    "ANOTHER_FEATURE": true,
+  },
+}
+`;
+
+exports[`config feature toggle values are correct: Features for staging: mainbrand US 1`] = `
+Object {
+  "GLOBAL_FEATURE": true,
+  "moduleOne": Object {
+    "SOME_FEATURE": true,
+  },
+  "moduleTwo": Object {
+    "ANOTHER_FEATURE": true,
+  },
+}
+`;
+
+exports[`config feature toggle values are correct: Features for staging: otherbrand RU 1`] = `
+Object {
+  "GLOBAL_FEATURE": true,
+  "moduleOne": Object {
+    "SOME_FEATURE": true,
+  },
+  "moduleTwo": Object {
+    "ANOTHER_FEATURE": true,
+  },
+}
+`;
+
+exports[`config feature toggle values are correct: Features for staging: otherbrand US 1`] = `
+Object {
+  "GLOBAL_FEATURE": true,
+  "moduleOne": Object {
+    "SOME_FEATURE": true,
+  },
+  "moduleTwo": Object {
+    "ANOTHER_FEATURE": true,
+  },
+}
+`;
+
+exports[`config feature toggle values are correct: Features for test: mainbrand RU 1`] = `
+Object {
+  "GLOBAL_FEATURE": false,
+}
+`;
+
+exports[`config feature toggle values are correct: Features for test: mainbrand US 1`] = `
+Object {
+  "GLOBAL_FEATURE": false,
+}
+`;
+
+exports[`config feature toggle values are correct: Features for test: otherbrand RU 1`] = `
+Object {
+  "GLOBAL_FEATURE": true,
+}
+`;
+
+exports[`config feature toggle values are correct: Features for test: otherbrand US 1`] = `
+Object {
+  "GLOBAL_FEATURE": true,
+}
+`;
+
+exports[`config values are correct: Config for development: mainbrand RU 1`] = `Object {}`;
+
+exports[`config values are correct: Config for development: mainbrand US 1`] = `Object {}`;
+
+exports[`config values are correct: Config for development: otherbrand RU 1`] = `Object {}`;
+
+exports[`config values are correct: Config for development: otherbrand US 1`] = `Object {}`;
+
+exports[`config values are correct: Config for production: mainbrand RU 1`] = `
+Object {
+  "aws": Object {
+    "region": "eu-north-1",
+  },
+}
+`;
+
+exports[`config values are correct: Config for production: mainbrand US 1`] = `
+Object {
+  "aws": Object {
+    "region": "eu-west-1",
+  },
+}
+`;
+
+exports[`config values are correct: Config for production: otherbrand RU 1`] = `
+Object {
+  "aws": Object {
+    "region": "eu-west-1",
+  },
+}
+`;
+
+exports[`config values are correct: Config for production: otherbrand US 1`] = `
+Object {
+  "aws": Object {
+    "region": "eu-north-1",
+  },
+}
+`;
+
+exports[`config values are correct: Config for staging: mainbrand RU 1`] = `
+Object {
+  "aws": Object {
+    "region": "eu-north-1",
+  },
+}
+`;
+
+exports[`config values are correct: Config for staging: mainbrand US 1`] = `
+Object {
+  "aws": Object {
+    "region": "eu-west-1",
+  },
+}
+`;
+
+exports[`config values are correct: Config for staging: otherbrand RU 1`] = `
+Object {
+  "aws": Object {
+    "region": "eu-north-1",
+  },
+}
+`;
+
+exports[`config values are correct: Config for staging: otherbrand US 1`] = `
+Object {
+  "aws": Object {
+    "region": "eu-west-1",
+  },
+}
+`;
+
+exports[`config values are correct: Config for test: mainbrand RU 1`] = `Object {}`;
+
+exports[`config values are correct: Config for test: mainbrand US 1`] = `Object {}`;
+
+exports[`config values are correct: Config for test: otherbrand RU 1`] = `Object {}`;
+
+exports[`config values are correct: Config for test: otherbrand US 1`] = `Object {}`;

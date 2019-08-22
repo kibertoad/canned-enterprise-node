@@ -1,0 +1,136 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`configBuilder buildConfigFromDefinition resolves config for specific country correctly 1`] = `
+Object {
+  "someExternalService": Object {
+    "baseUrl": "https://someservice.2ru/services/",
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config for specific country for all brands correctly 1`] = `
+Object {
+  "someExternalService": Object {
+    "baseUrl": "https://someservice.ru/services/",
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config with all brands global value correctly 1`] = `
+Object {
+  "someExternalService": Object {
+    "baseUrl": "https://someservice.com/services/",
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config with brand-wide global value correctly 1`] = `
+Object {
+  "someExternalService": Object {
+    "baseUrl": "https://someservice.com/services2/",
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config with global value correctly 1`] = `
+Object {
+  "someExternalService": Object {
+    "baseUrl": "https://someservice.com/services1/",
+  },
+}
+`;
+
+exports[`configBuilder buildFeatureTogglesFromDefinitions merges config from multiple environments correctly 1`] = `
+Object {
+  "moduleOne": Object {
+    "SOME_FEATURE": true,
+  },
+  "moduleTwo": Object {
+    "ANOTHER_FEATURE": true,
+  },
+}
+`;
+
+exports[`configBuilder buildFeatureTogglesFromDefinitions merges config from other environment correctly 1`] = `
+Object {
+  "moduleOne": Object {
+    "SOME_FEATURE": false,
+  },
+  "moduleTwo": Object {
+    "ANOTHER_FEATURE": true,
+  },
+}
+`;
+
+exports[`configBuilder buildFeatureTogglesFromDefinitions merges partial config from other environment correctly 1`] = `
+Object {
+  "moduleOne": Object {
+    "SOME_FEATURE": true,
+  },
+  "moduleTwo": Object {
+    "ANOTHER_FEATURE": true,
+  },
+}
+`;
+
+exports[`configBuilder buildFeatureTogglesFromDefinitions resolves config with global value correctly 1`] = `
+Object {
+  "moduleTwo": Object {
+    "ANOTHER_FEATURE": false,
+  },
+}
+`;
+
+exports[`configBuilder buildFeatureTogglesFromDefinitions resolves flag for multiple countries for all brands correctly 1`] = `
+Object {
+  "moduleOne": Object {
+    "SOME_FEATURE": true,
+  },
+  "moduleTwo": Object {
+    "ANOTHER_FEATURE": true,
+  },
+}
+`;
+
+exports[`configBuilder buildFeatureTogglesFromDefinitions resolves flag for multiple countries for all brands correctly 2`] = `
+Object {
+  "moduleOne": Object {
+    "SOME_FEATURE": true,
+  },
+  "moduleTwo": Object {
+    "ANOTHER_FEATURE": true,
+  },
+}
+`;
+
+exports[`configBuilder buildFeatureTogglesFromDefinitions resolves flag for multiple countries for different brands correctly 1`] = `
+Object {
+  "moduleOne": Object {
+    "SOME_FEATURE": true,
+  },
+}
+`;
+
+exports[`configBuilder buildFeatureTogglesFromDefinitions resolves flag for multiple countries for different brands correctly 2`] = `
+Object {
+  "moduleOne": Object {
+    "SOME_FEATURE": false,
+  },
+}
+`;
+
+exports[`configBuilder buildFeatureTogglesFromDefinitions resolves flag for multiple countries for different brands correctly 3`] = `
+Object {
+  "moduleOne": Object {
+    "SOME_FEATURE": true,
+  },
+}
+`;
+
+exports[`configBuilder buildFeatureTogglesFromDefinitions resolves flag for multiple countries for different brands correctly 4`] = `
+Object {
+  "moduleOne": Object {
+    "SOME_FEATURE": true,
+  },
+}
+`;
