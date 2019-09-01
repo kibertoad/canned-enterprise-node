@@ -8,28 +8,29 @@
     "test": "jest --config=jest.config.json --runInBand --verbose",
     "test:coverage": "jest --config=jest.config.json --coverage --runInBand --verbose",
     "test:ci": "npm run eslint && npm run test:coverage",
-    "test:update-snapshot": "jest --config=jest.config.json --updateSnapshot",
+    "test:updateSnapshot": "jest --config=jest.config.json --updateSnapshot",
     "eslint": "eslint --format codeframe lib/**/*.ts",
     "prettier": "prettier --write \"lib/**/*.ts\""
   },
   "dependencies": {
-    "ramda": "^0.26.1",
-    "dotenv": "^8.1.0"
+    "deepmerge": "^4.0.0",
+    "dotenv": "^8.1.0",
+    "memoizee": "^0.4.14"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
     "@types/dotenv": "^6.1.1",
     "@types/jest": "^24.0.18",
-    "@types/node": "^10.14.16",
-    "@types/ramda": "^0.26.19",
+    "@types/memoizee": "^0.4.2",
+    "@types/node": "^10.14.17",
     "del-cli": "^2.0.0",
-    "eslint": "^6.2.1",
+    "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.1.0",
     "eslint-plugin-prettier": "^3.1.0",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.5.3"
+    "typescript": "^3.6.2"
   }
 }

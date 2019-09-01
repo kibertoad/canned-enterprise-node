@@ -3,12 +3,10 @@ import {
   DeepPartial,
   Country,
   Environment,
-  FeatureToggleEnvironmentMap, Brand
+  FeatureToggleEnvironmentMap,
+  Brand
 } from '../../configInterface'
-import {
-  buildConfigFromDefinition,
-  buildFeatureTogglesFromDefinitions
-} from '../configBuilder'
+import { buildConfigFromDefinition, buildFeatureTogglesFromDefinitions } from '../configBuilder'
 
 describe('configBuilder', () => {
   describe('buildFeatureTogglesFromDefinitions', () => {
@@ -194,11 +192,7 @@ describe('configBuilder', () => {
         }
       }
 
-      const resolvedConfig = buildConfigFromDefinition(
-        config,
-        Country.US,
-        Brand.MainBrand
-      )
+      const resolvedConfig = buildConfigFromDefinition(config, Country.US, Brand.MainBrand)
       expect(resolvedConfig).toMatchSnapshot()
     })
 
@@ -212,11 +206,7 @@ describe('configBuilder', () => {
         }
       }
 
-      const resolvedConfig = buildConfigFromDefinition(
-        config,
-        Country.US,
-        Brand.MainBrand
-      )
+      const resolvedConfig = buildConfigFromDefinition(config, Country.US, Brand.MainBrand)
       expect(resolvedConfig).toMatchSnapshot()
     })
 
@@ -227,11 +217,7 @@ describe('configBuilder', () => {
         }
       }
 
-      const resolvedConfig = buildConfigFromDefinition(
-        config,
-        Country.US,
-        Brand.MainBrand
-      )
+      const resolvedConfig = buildConfigFromDefinition(config, Country.US, Brand.MainBrand)
       expect(resolvedConfig).toMatchSnapshot()
     })
 
@@ -248,11 +234,7 @@ describe('configBuilder', () => {
         }
       }
 
-      const resolvedConfig = buildConfigFromDefinition(
-        config,
-        Country.RUSSIA,
-        Brand.MainBrand
-      )
+      const resolvedConfig = buildConfigFromDefinition(config, Country.RUSSIA, Brand.MainBrand)
       expect(resolvedConfig).toMatchSnapshot()
     })
 
@@ -266,11 +248,7 @@ describe('configBuilder', () => {
         }
       }
 
-      const resolvedConfig = buildConfigFromDefinition(
-        config,
-        Country.RUSSIA,
-        Brand.MainBrand
-      )
+      const resolvedConfig = buildConfigFromDefinition(config, Country.RUSSIA, Brand.MainBrand)
       expect(resolvedConfig).toMatchSnapshot()
     })
   })

@@ -94,5 +94,4 @@ export const environmentFeatureToggles: FeatureToggleEnvironmentMap = {
   }
 }
 
-export const isProductionEnvironment =
-  process.env.APP_ENV === Environment.production
+export const isProductionEnvironment = process.env.APP_ENV === Environment.production

@@ -48,12 +48,8 @@ type StringParam =
   | string
   | { [key in Brand]: string | { [key in Country]: string } }
   | { [key in Country]: string }
-type BooleanParam =
-  | boolean
-  | { [key in Brand]: boolean | { [key in Country]: boolean } | string[] }
-type NumberParam =
-  | number
-  | { [key in Brand]: number | { [key in Country]: number } | number[] }
+type BooleanParam = boolean | { [key in Brand]: boolean | { [key in Country]: boolean } | string[] }
+type NumberParam = number | { [key in Brand]: number | { [key in Country]: number } | number[] }
 
 export enum Environment {
   production = 'production',
