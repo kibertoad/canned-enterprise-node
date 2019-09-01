@@ -1,0 +1,13 @@
+{
+  "name": "canned-enterprise-node",
+  "version": "1.0.0",
+  "scripts": {
+    "test:typescript-template": "cd typescript-template && npm install && npm run test:ci",
+    "test:logging": "cd logging && npm install && npm run test:ci",
+    "test:ci": "npm run test:typescript-template && npm run test:logging"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
