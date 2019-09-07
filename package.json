@@ -4,6 +4,7 @@
   "scripts": {
     "test:typescript-template": "cd typescript-template && npm install && npm run test:ci",
     "test:config": "cd config && npm install && npm run test:ci",
+    "test:snippets": "cd snippets && npm install && npm run test:ci",
     "test:logging": "cd logging && npm install && npm run test:ci",
     "test:ci": "npm run test:typescript-template && npm run test:logging && npm run test:config"
   },

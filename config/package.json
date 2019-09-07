@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "build": "del-cli dist/ && tsc",
+    "build": "tsc",
     "prepublishOnly": "npm run build",
     "test": "jest --config=jest.config.json --runInBand --verbose",
     "test:coverage": "jest --config=jest.config.json --coverage --runInBand --verbose",
@@ -24,7 +24,6 @@
     "@types/jest": "^24.0.18",
     "@types/memoizee": "^0.4.2",
     "@types/node": "^10.14.17",
-    "del-cli": "^2.0.0",
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.1.0",
     "eslint-plugin-prettier": "^3.1.0",

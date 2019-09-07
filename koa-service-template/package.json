@@ -2,7 +2,7 @@
   "name": "koa-service-template",
   "version": "1.0.0",
   "scripts": {
-    "build": "del-cli dist/ && tsc",
+    "build": "tsc",
     "test": "jest --config=jest.config.json",
     "test:coverage": "jest --config=jest.config.json --coverage",
     "test:ci": "npm run eslint && npm run test:coverage",
@@ -25,7 +25,6 @@
     "@types/superagent": "^4.1.3",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
-    "del-cli": "^2.0.0",
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.1.0",
     "eslint-plugin-prettier": "^3.1.0",
