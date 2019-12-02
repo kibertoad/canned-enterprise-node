@@ -1,0 +1,53 @@
+[
+    {
+        "scope": "http://jsonplaceholder.typicode.com:80",
+        "method": "PUT",
+        "path": "/posts/1",
+        "body": {
+            "id": 1,
+            "title": "lorem ipsum"
+        },
+        "status": 200,
+        "response": {
+            "id": 1,
+            "title": "lorem ipsum"
+        },
+        "rawHeaders": [
+            "Date",
+            "Mon, 02 Dec 2019 00:23:55 GMT",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "Content-Length",
+            "39",
+            "Connection",
+            "keep-alive",
+            "Set-Cookie",
+            "__cfduid=d24bd0c925fcc2900ca3d59f8631c7fca1575246234; expires=Wed, 01-Jan-20 00:23:54 GMT; path=/; domain=.typicode.com; HttpOnly",
+            "X-Powered-By",
+            "Express",
+            "Vary",
+            "Origin, Accept-Encoding",
+            "Access-Control-Allow-Credentials",
+            "true",
+            "Cache-Control",
+            "no-cache",
+            "Pragma",
+            "no-cache",
+            "Expires",
+            "-1",
+            "X-Content-Type-Options",
+            "nosniff",
+            "Etag",
+            "W/\"27-l1C9/XhRqwj3TczTOPUacHGGbGc\"",
+            "Via",
+            "1.1 vegur",
+            "CF-Cache-Status",
+            "DYNAMIC",
+            "Server",
+            "cloudflare",
+            "CF-RAY",
+            "53e927a6f8fc275a-FRA"
+        ],
+        "responseIsBinary": false
+    }
+]

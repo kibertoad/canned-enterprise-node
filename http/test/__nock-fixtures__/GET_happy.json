@@ -1,0 +1,53 @@
+[
+    {
+        "scope": "http://jsonplaceholder.typicode.com:80",
+        "method": "GET",
+        "path": "/todos/1",
+        "body": "",
+        "status": 200,
+        "response": [
+            "1f8b0800000000000003abe65250502a2d4e2df24c51b25230d401713311cc92cc929c54252b05a594d49cd4e492d26285c4d212104ecd55022b48cecf2dc8492d490569494bcc294ee5aa050037dc01b753000000"
+        ],
+        "rawHeaders": [
+            "Date",
+            "Mon, 02 Dec 2019 00:23:53 GMT",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "Transfer-Encoding",
+            "chunked",
+            "Connection",
+            "keep-alive",
+            "Set-Cookie",
+            "__cfduid=d82c5dd93bae897865e4058d995fc52061575246233; expires=Wed, 01-Jan-20 00:23:53 GMT; path=/; domain=.typicode.com; HttpOnly",
+            "X-Powered-By",
+            "Express",
+            "Vary",
+            "Origin, Accept-Encoding",
+            "Access-Control-Allow-Credentials",
+            "true",
+            "Cache-Control",
+            "max-age=14400",
+            "Pragma",
+            "no-cache",
+            "Expires",
+            "-1",
+            "X-Content-Type-Options",
+            "nosniff",
+            "Etag",
+            "W/\"53-hfEnumeNh6YirfjyjaujcOPPT+s\"",
+            "Via",
+            "1.1 vegur",
+            "CF-Cache-Status",
+            "HIT",
+            "Age",
+            "4890",
+            "Server",
+            "cloudflare",
+            "CF-RAY",
+            "53e9279eeec1275a-FRA",
+            "Content-Encoding",
+            "gzip"
+        ],
+        "responseIsBinary": false
+    }
+]

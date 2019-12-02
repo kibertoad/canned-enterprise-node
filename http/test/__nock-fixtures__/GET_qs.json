@@ -1,0 +1,53 @@
+[
+    {
+        "scope": "http://jsonplaceholder.typicode.com:80",
+        "method": "GET",
+        "path": "/todos?userId=1",
+        "body": "",
+        "status": 200,
+        "response": [
+            "1f8b0800000000000003a5954b6edb401044f73e45436b2f2c27763e37f019822c9a64cb6e607e9e8f1020c8dd5343ca3241320e815910d05052bfe9eaa99a1f3744bff1101d4a92f8341cbed3f1767aa1f345d66c04ebc32046fa5c1271c9f5117bb8fca4f73618c952ff76629304afffdcfe0f70bf04bc164d84da8e2dcaf46ab0944cfe74d25e99f0751bf0d312782acfca99cee21448abaea436c2e72501db0f3e464f500b1f78ab7c8e655ff5876575c39d8fea53ddbc374633540211ed58a8c54989070d9a7aade23185e8cf3a88cba4c694c6f13d6e8c8f8a31d84ce4acde498576250d7873f6a684cc5061da89b74e1bb5feb2e4a3274ff22bc8a099a9f72e0944c8254e48756dbcafeb7efdbbbe6f9adb7a80b96b9af3b72509c39584e10a058929543764784343da3c50fb7b3ade6d8b98f2758683373e8a7d2d32c96859b11e43a0a9c9e32a5fce029f4489c55edc520fcfc46f23ad82a60a07521063c40d80d42040ee68da4c98fda455c2c08d33015db547e3c4561133ef2315f706c48462ffa21991edaff6dbf6fcfefe5609c4ddac36b145bf97f5a6bbf79356e9c27d5f107468527cba5e0f49d1b08cd7d12c63dad0ab60a9469f456dbd071db27684fee352da4f5bc5ca383e88594d380f31e1f79057477d31a1f52c7d1034a345e6aa8e660c1c75dcccb84918e6454d53fbf7ab009a6e10e73b4cd76857332171505c5a82b4251f104be3d83fe2defcfc0bf7bf99c7df080000"
+        ],
+        "rawHeaders": [
+            "Date",
+            "Mon, 02 Dec 2019 00:23:53 GMT",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "Transfer-Encoding",
+            "chunked",
+            "Connection",
+            "keep-alive",
+            "Set-Cookie",
+            "__cfduid=d82c5dd93bae897865e4058d995fc52061575246233; expires=Wed, 01-Jan-20 00:23:53 GMT; path=/; domain=.typicode.com; HttpOnly",
+            "X-Powered-By",
+            "Express",
+            "Vary",
+            "Origin, Accept-Encoding",
+            "Access-Control-Allow-Credentials",
+            "true",
+            "Cache-Control",
+            "max-age=14400",
+            "Pragma",
+            "no-cache",
+            "Expires",
+            "-1",
+            "X-Content-Type-Options",
+            "nosniff",
+            "Etag",
+            "W/\"8df-BI33H3JkF5x/twg0KTe/qy2U04I\"",
+            "Content-Encoding",
+            "gzip",
+            "Via",
+            "1.1 vegur",
+            "CF-Cache-Status",
+            "HIT",
+            "Age",
+            "1247",
+            "Server",
+            "cloudflare",
+            "CF-RAY",
+            "53e9279f2ee4275a-FRA"
+        ],
+        "responseIsBinary": false
+    }
+]
