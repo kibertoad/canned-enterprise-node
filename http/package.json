@@ -1,0 +1,33 @@
+{
+  "name": "http",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --config=jest.config.json",
+    "test:coverage": "jest --config=jest.config.json --coverage",
+    "test:ci": "npm run lint && npm run test:coverage",
+    "lint": "eslint --format codeframe \"lib/**/*.ts\" \"test/**/*.ts\"",
+    "prettier": "prettier --write \"{lib,test}/**/*.{js,ts}\" index.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "agentkeepalive": "^4.1.0",
+    "got": "^10.1.0",
+    "prom-client": "^11.5.3"
+  },
+  "devDependencies": {
+    "@types/cacheable-request": "^6.0.1",
+    "@types/jest": "^24.0.24",
+    "@types/node": "^10.17.11",
+    "@typescript-eslint/eslint-plugin": "^2.12.0",
+    "@typescript-eslint/parser": "^2.12.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^24.9.0",
+    "nockback-harder": "^4.0.1",
+    "prettier": "^1.19.1",
+    "ts-jest": "^24.2.0",
+    "typescript": "^3.7.4"
+  }
+}

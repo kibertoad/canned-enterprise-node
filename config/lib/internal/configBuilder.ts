@@ -50,14 +50,11 @@ export function buildFeatureTogglesFromDefinition(
   country: string,
   brand: Brand
 ): FeatureToggles {
-  return Object.entries(definition).reduce(
-    (acc, [key, value]) => {
-      const transformedValue = getTransformedDefinitionValue(key, value, country, brand, true)
-      acc[key] = transformedValue
-      return acc
-    },
-    {} as Record<string, any>
-  ) as FeatureToggles
+  return Object.entries(definition).reduce((acc, [key, value]) => {
+    const transformedValue = getTransformedDefinitionValue(key, value, country, brand, true)
+    acc[key] = transformedValue
+    return acc
+  }, {} as Record<string, any>) as FeatureToggles
 }
 
 export function buildConfigFromDefinition(
@@ -65,14 +62,11 @@ export function buildConfigFromDefinition(
   country: string,
   brand: Brand
 ): Config {
-  return Object.entries(definition).reduce(
-    (acc, [key, value]) => {
-      const transformedValue = getTransformedDefinitionValue(key, value, country, brand, false)
-      acc[key] = transformedValue
-      return acc
-    },
-    {} as Record<string, any>
-  ) as Config
+  return Object.entries(definition).reduce((acc, [key, value]) => {
+    const transformedValue = getTransformedDefinitionValue(key, value, country, brand, false)
+    acc[key] = transformedValue
+    return acc
+  }, {} as Record<string, any>) as Config
 }
 
 function isBrand(key: string): boolean {
@@ -117,47 +111,44 @@ function getTransformedDefinitionValue(
     return sourceValue
   }
 
-  return Object.entries(sourceValue).reduce(
-    (acc, [key, value]) => {
-      // Value is already resolved, nothing to do anymore
-      // ToDo take a look
-      // @ts-ignore
-      if (acc !== DO_NOT_ADD && typeof acc !== 'object') {
-        return acc
-      }
-
-      if (isBrand(key)) {
-        if (key !== brand) {
-          return DO_NOT_ADD
-        }
-        return resolveCountryConfig(value, country, resultIsBoolean)
-      }
-
-      if (isCountry(key)) {
-        if (key !== country) {
-          return DO_NOT_ADD
-        }
-        return value
-      }
-
-      if (resultIsBoolean) {
-        if (Array.isArray(sourceValue)) {
-          return sourceValue.includes(country)
-        }
-      }
-
-      const transformedValue = getTransformedDefinitionValue(
-        key,
-        value,
-        country,
-        brand,
-        resultIsBoolean
-      )
-      if (transformedValue !== DO_NOT_ADD) {
-        acc[key] = transformedValue
-      }
+  return Object.entries(sourceValue).reduce((acc, [key, value]) => {
+    // Value is already resolved, nothing to do anymore
+    // ToDo take a look
+    // @ts-ignore
+    if (acc !== DO_NOT_ADD && typeof acc !== 'object') {
       return acc
-    },
-    {} as Record<string, any>
-  )
+    }
+
+    if (isBrand(key)) {
+      if (key !== brand) {
+        return DO_NOT_ADD
+      }
+      return resolveCountryConfig(value, country, resultIsBoolean)
+    }
+
+    if (isCountry(key)) {
+      if (key !== country) {
+        return DO_NOT_ADD
+      }
+      return value
+    }
+
+    if (resultIsBoolean) {
+      if (Array.isArray(sourceValue)) {
+        return sourceValue.includes(country)
+      }
+    }
+
+    const transformedValue = getTransformedDefinitionValue(
+      key,
+      value,
+      country,
+      brand,
+      resultIsBoolean
+    )
+    if (transformedValue !== DO_NOT_ADD) {
+      acc[key] = transformedValue
+    }
+    return acc
+  }, {} as Record<string, any>)
 }

@@ -1,0 +1,36 @@
+[
+    {
+        "scope": "http://httpstat.us:80",
+        "method": "GET",
+        "path": "/404",
+        "body": "",
+        "status": 404,
+        "response": {
+            "code": 404,
+            "description": "Not Found"
+        },
+        "rawHeaders": [
+            "Cache-Control",
+            "private",
+            "Content-Length",
+            "41",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "Server",
+            "Microsoft-IIS/10.0",
+            "X-AspNetMvc-Version",
+            "5.1",
+            "Access-Control-Allow-Origin",
+            "*",
+            "X-AspNet-Version",
+            "4.0.30319",
+            "X-Powered-By",
+            "ASP.NET",
+            "Set-Cookie",
+            "ARRAffinity=b6085fbcef9c78777361bd5703a9667aeffe9f2fb6f621b5e17dd780672b42d2;Path=/;HttpOnly;Domain=httpstat.us",
+            "Date",
+            "Mon, 02 Dec 2019 00:23:53 GMT"
+        ],
+        "responseIsBinary": false
+    }
+]
