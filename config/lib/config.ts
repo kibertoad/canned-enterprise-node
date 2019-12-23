@@ -1,13 +1,11 @@
 import {
-  Brand,
   ConfigDefinition,
   ConfigDefinitionMap,
-  Country,
   DeepPartial,
-  Environment,
   FeatureToggleDefinition,
   FeatureToggleEnvironmentMap
 } from './configInterface'
+import { Brand, Country, Environment } from './configTypes'
 
 export const dbConfig = Object.freeze({
   default: {
@@ -37,32 +35,34 @@ export const defaultConfig: DeepPartial<ConfigDefinition> = {}
 export const environmentConfig: ConfigDefinitionMap = {
   default: {
     someExternalService: {
-      baseUrl: 'http://service.com',
+      region: 'http://service.com',
       auth: {
         username: getMandatoryEnvParam('EXTERNAL_SYSTEM_USERNAME'),
         password: getMandatoryEnvParam('EXTERNAL_SYSTEM_PASSWORD')
       }
     },
     aws: {
-      accessKeyId: getMandatoryEnvParam('AWS_ACCESS_KEY_ID'),
-      secretAccessKey: getMandatoryEnvParam('AWS_SECRET_ACCESS_KEY')
+      credentials: {
+        accessKeyId: getMandatoryEnvParam('AWS_ACCESS_KEY_ID'),
+        secretAccessKey: getMandatoryEnvParam('AWS_SECRET_ACCESS_KEY')
+      }
     }
   },
-  production: {
+  [Environment.production]: {
     aws: {
       region: {
-        [Brand.MainBrand]: {
+        [Brand.Alpha]: {
           [Country.US]: 'eu-west-1',
           [Country.RUSSIA]: 'eu-north-1'
         },
-        [Brand.OtherBrand]: {
+        [Brand.Beta]: {
           [Country.US]: 'eu-north-1',
           [Country.RUSSIA]: 'eu-west-1'
         }
       }
     }
   },
-  staging: {
+  [Environment.staging]: {
     aws: {
       region: {
         [Country.US]: 'eu-west-1',
@@ -74,16 +74,16 @@ export const environmentConfig: ConfigDefinitionMap = {
 
 export const defaultFeatureToggles: DeepPartial<FeatureToggleDefinition> = {
   GLOBAL_FEATURE: {
-    [Brand.MainBrand]: false,
-    [Brand.OtherBrand]: true
+    [Brand.Alpha]: false,
+    [Brand.Beta]: true
   }
 }
 
 export const environmentFeatureToggles: FeatureToggleEnvironmentMap = {
-  staging: {
+  [Environment.staging]: {
     GLOBAL_FEATURE: {
-      [Brand.MainBrand]: true,
-      [Brand.OtherBrand]: true
+      [Brand.Alpha]: true,
+      [Brand.Beta]: true
     },
     moduleOne: {
       SOME_FEATURE: [Country.US, Country.RUSSIA]

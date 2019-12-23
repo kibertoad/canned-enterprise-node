@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`configBuilder buildConfigFromDefinition resolves arrays correctly 1`] = `
+Object {
+  "aws": Object {
+    "supportedFeatures": Array [
+      "a",
+      "b",
+    ],
+  },
+}
+`;
+
 exports[`configBuilder buildConfigFromDefinition resolves config for specific country correctly 1`] = `
 Object {
   "someExternalService": Object {
@@ -24,6 +35,28 @@ Object {
 }
 `;
 
+exports[`configBuilder buildConfigFromDefinition resolves config with brand default correctly 1`] = `
+Object {
+  "aws": Object {
+    "credentials": Object {
+      "accessKeyId": "token",
+      "secretAccessKey": "id",
+    },
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config with brand default correctly 2`] = `
+Object {
+  "aws": Object {
+    "credentials": Object {
+      "accessKeyId": "tokenUsa",
+      "secretAccessKey": "isUsa",
+    },
+  },
+}
+`;
+
 exports[`configBuilder buildConfigFromDefinition resolves config with brand-wide global value correctly 1`] = `
 Object {
   "someExternalService": Object {
@@ -32,10 +65,115 @@ Object {
 }
 `;
 
+exports[`configBuilder buildConfigFromDefinition resolves config with country default correctly 1`] = `
+Object {
+  "aws": Object {
+    "credentials": Object {
+      "accessKeyId": "tokenUsa",
+      "secretAccessKey": "isUsa",
+    },
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config with country default correctly 2`] = `
+Object {
+  "aws": Object {
+    "credentials": Object {
+      "accessKeyId": "tokenDefault",
+      "secretAccessKey": "isDefault",
+    },
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config with country is a first filter 1`] = `
+Object {
+  "aws": Object {
+    "credentials": Object {
+      "accessKeyId": "tokenUsa",
+      "secretAccessKey": "isUsa",
+    },
+    "region": "eu-west-1",
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config with country is a first filter 2`] = `
+Object {
+  "aws": Object {
+    "credentials": Object {
+      "accessKeyId": "tokenDefault",
+      "secretAccessKey": "isDefault",
+    },
+    "region": "eu-west-1",
+  },
+}
+`;
+
 exports[`configBuilder buildConfigFromDefinition resolves config with global value correctly 1`] = `
 Object {
   "someExternalService": Object {
     "baseUrl": "https://someservice.com/services1/",
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config with missing default correctly 1`] = `
+Object {
+  "isDebugMode": undefined,
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config with missing default correctly 2`] = `
+Object {
+  "isDebugMode": false,
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config with nested BrandRecordParam correctly 1`] = `
+Object {
+  "aws": Object {
+    "credentials": Object {
+      "accessKeyId": "token",
+      "secretAccessKey": "id",
+    },
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves config with nested BrandRecordParam correctly 2`] = `
+Object {
+  "aws": Object {
+    "credentials": Object {
+      "accessKeyId": "tokenUsa",
+      "secretAccessKey": "isUsa",
+    },
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves deep nested params correctly 1`] = `
+Object {
+  "someExternalService": Object {
+    "auth": Object {
+      "username": "dummy city",
+    },
+  },
+}
+`;
+
+exports[`configBuilder buildConfigFromDefinition resolves numbers correctly 1`] = `
+Object {
+  "aws": Object {
+    "credentials": Object {
+      "accessKeyId": "OGE4Mjk0MTc2MmFhZjJhMTAxNjJhZWM2ZWFkYTA5MDZ8TjdwcHBSeFplTQ==",
+      "secretAccessKey": "8a82941762aaf2a10162aec726f3090a",
+    },
+    "retriesOnError": 10000,
+  },
+  "someExternalService": Object {
+    "timeout": 20000,
   },
 }
 `;

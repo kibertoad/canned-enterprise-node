@@ -1,24 +1,27 @@
 import deepMerge from 'deepmerge'
 import {
-  Brand,
   Config,
   ConfigDefinition,
-  Country,
   DeepPartial,
-  Environment,
   FeatureToggleDefinition,
   FeatureToggleEnvironmentMap,
   FeatureToggles
 } from '../configInterface'
-const DO_NOT_ADD = Symbol()
+import {
+  Country,
+  BRAND_DEFAULT_FILTER,
+  Environment,
+  COUNTRY_DEFAULT_FILTER,
+  Brand
+} from '../configTypes'
 
 export function buildFeatureTogglesFromDefinitions(
   toggleConfigs: FeatureToggleEnvironmentMap,
   environment: Environment,
-  country: string,
+  country: Country,
   brand: Brand
 ): FeatureToggles {
-  const envIndex = Object.values(Environment).indexOf(environment)
+  const envIndex = Object.values(Environment).indexOf(environment as Environment)
   if (envIndex === -1) {
     throw new Error(`Unknown environment: ${environment}`)
   }
@@ -47,26 +50,18 @@ export function buildFeatureTogglesFromDefinitions(
 
 export function buildFeatureTogglesFromDefinition(
   definition: DeepPartial<FeatureToggleDefinition>,
-  country: string,
+  country: Country,
   brand: Brand
 ): FeatureToggles {
-  return Object.entries(definition).reduce((acc, [key, value]) => {
-    const transformedValue = getTransformedDefinitionValue(key, value, country, brand, true)
-    acc[key] = transformedValue
-    return acc
-  }, {} as Record<string, any>) as FeatureToggles
+  return processConfigNode(definition, {}, '', country, brand, true)
 }
 
 export function buildConfigFromDefinition(
   definition: DeepPartial<ConfigDefinition>,
-  country: string,
+  country: Country,
   brand: Brand
 ): Config {
-  return Object.entries(definition).reduce((acc, [key, value]) => {
-    const transformedValue = getTransformedDefinitionValue(key, value, country, brand, false)
-    acc[key] = transformedValue
-    return acc
-  }, {} as Record<string, any>) as Config
+  return processConfigNode(definition, {}, '', country, brand, false)
 }
 
 function isBrand(key: string): boolean {
@@ -77,78 +72,143 @@ function isCountry(key: string): boolean {
   return Object.values(Country).includes(key as Country)
 }
 
-function resolveCountryConfig(sourceValue: any, country: string, resultIsBoolean: boolean) {
-  if (typeof sourceValue !== 'object') {
-    return sourceValue
+function getBranchRelevance(
+  key: string,
+  country: Country,
+  brand: Brand,
+  parentNode: Record<string, any>
+): Relevance {
+  if (isBrand(key)) {
+    return key === brand ? Relevance.IS_FILTER : Relevance.IRRELEVANT
   }
 
-  if (resultIsBoolean) {
-    if (Array.isArray(sourceValue)) {
-      return sourceValue.includes(country)
+  if (isCountry(key)) {
+    return key === country ? Relevance.IS_FILTER : Relevance.IRRELEVANT
+  }
+
+  if (key === BRAND_DEFAULT_FILTER) {
+    return parentNode[brand] === undefined ? Relevance.IS_FILTER : Relevance.IRRELEVANT
+  }
+
+  if (key === COUNTRY_DEFAULT_FILTER) {
+    return parentNode[country] === undefined ? Relevance.IS_FILTER : Relevance.IRRELEVANT
+  }
+
+  return Relevance.IS_VALUE
+}
+
+export enum Relevance {
+  IRRELEVANT,
+  IS_FILTER,
+  IS_VALUE
+}
+
+function setConfigField(
+  targetConfig: Record<string, any>,
+  parentKey: string,
+  key: string,
+  value: any,
+  relevance: Relevance
+) {
+  if (relevance === Relevance.IS_VALUE) {
+    if (parentKey) {
+      if (targetConfig[parentKey] === undefined) {
+        targetConfig[parentKey] = {}
+      }
+      targetConfig[parentKey][key] = value
+    } else {
+      targetConfig[key] = value
     }
   }
 
-  const countryConfig = sourceValue[country]
-  return countryConfig || DO_NOT_ADD
+  // If current node is filter, we ignore its key, as it should not be present in resolved config
+  if (relevance === Relevance.IS_FILTER) {
+    targetConfig[parentKey] = value
+  }
+}
+
+function initChildren(targetConfig: Record<string, any>, key: string, parentKey: string) {
+  if (parentKey) {
+    if (targetConfig[parentKey] === undefined) {
+      targetConfig[parentKey] = {}
+    }
+
+    if (targetConfig[parentKey][key] === undefined) {
+      targetConfig[parentKey][key] = {}
+    }
+    return
+  }
+
+  if (targetConfig[key] === undefined) {
+    targetConfig[key] = {}
+  }
 }
 
 /**
  * Handle logic for bulk configuration.
+ * Iterate over all nodes in configuration tree and build complete config for specific country and brand
  * If brand is omitted, config option applies to all brands.
  * If country is omitted, config option applies to all countries.
  * If boolean param has an "array of strings" type, it is a list of countries where it is true.
  */
-function getTransformedDefinitionValue(
-  // ToDo take a look
-  // @ts-ignore
-  sourceKey: string,
+function processConfigNode<T extends Config | FeatureToggles>(
   sourceValue: any,
-  country: string,
+  targetConfig: Partial<T>,
+  parentKey: string,
+  country: Country,
   brand: Brand,
   resultIsBoolean: boolean
-) {
-  if (typeof sourceValue !== 'object') {
-    return sourceValue
+): T {
+  let isLeafNode = true
+
+  Object.entries(sourceValue).forEach(([key, value]) => {
+    const relevance = getBranchRelevance(key, country, brand, sourceValue)
+    if (relevance === Relevance.IRRELEVANT) {
+      return
+    }
+    isLeafNode = false
+
+    // Process primitive values
+    if (typeof value !== 'object') {
+      setConfigField(targetConfig, parentKey, key, value, relevance)
+      return
+    }
+
+    if (Array.isArray(value)) {
+      // If boolean param has an "array of strings" type, it is a list of countries where it is true.
+      if (resultIsBoolean) {
+        const resolvedValue = value.includes(country)
+        setConfigField(targetConfig, parentKey, key, resolvedValue, relevance)
+        return
+      }
+
+      // Otherwise it should be preserved as is
+      setConfigField(targetConfig, parentKey, key, value, relevance)
+      return
+    }
+
+    // Process object
+    let nextTargetConfig = targetConfig
+
+    let nextParentKey = parentKey
+    if (relevance === Relevance.IS_VALUE) {
+      initChildren(targetConfig, key, parentKey)
+
+      if (parentKey) {
+        nextTargetConfig = (targetConfig as any)[parentKey]
+      }
+
+      // We need to store last non-filter key to correctly handle cases with filters, so that we known correctly where to attach next resolved non-filter value
+      nextParentKey = key
+    }
+
+    processConfigNode(value, nextTargetConfig, nextParentKey, country, brand, resultIsBoolean)
+  })
+
+  // If node has no children and there is no value resolved for him, it should be undefined, not an empty object (that would be set via initChildren previously)
+  if (isLeafNode && parentKey) {
+    setConfigField(targetConfig, parentKey, '', undefined, Relevance.IS_FILTER)
   }
 
-  return Object.entries(sourceValue).reduce((acc, [key, value]) => {
-    // Value is already resolved, nothing to do anymore
-    // ToDo take a look
-    // @ts-ignore
-    if (acc !== DO_NOT_ADD && typeof acc !== 'object') {
-      return acc
-    }
-
-    if (isBrand(key)) {
-      if (key !== brand) {
-        return DO_NOT_ADD
-      }
-      return resolveCountryConfig(value, country, resultIsBoolean)
-    }
-
-    if (isCountry(key)) {
-      if (key !== country) {
-        return DO_NOT_ADD
-      }
-      return value
-    }
-
-    if (resultIsBoolean) {
-      if (Array.isArray(sourceValue)) {
-        return sourceValue.includes(country)
-      }
-    }
-
-    const transformedValue = getTransformedDefinitionValue(
-      key,
-      value,
-      country,
-      brand,
-      resultIsBoolean
-    )
-    if (transformedValue !== DO_NOT_ADD) {
-      acc[key] = transformedValue
-    }
-    return acc
-  }, {} as Record<string, any>)
+  return targetConfig as T
 }

@@ -1,20 +1,191 @@
-import {
-  ConfigDefinition,
-  DeepPartial,
-  Country,
-  Environment,
-  FeatureToggleEnvironmentMap,
-  Brand
-} from '../../configInterface'
+import { ConfigDefinition, DeepPartial, FeatureToggleEnvironmentMap } from '../../configInterface'
 import { buildConfigFromDefinition, buildFeatureTogglesFromDefinitions } from '../configBuilder'
+import { Brand, Country, Environment } from '../../configTypes'
 
 describe('configBuilder', () => {
+  describe('buildConfigFromDefinition', () => {
+    it('resolves config with nested BrandRecordParam correctly', () => {
+      const config: DeepPartial<ConfigDefinition> = {
+        aws: {
+          credentials: {
+            alpha: {
+              accessKeyId: 'token',
+              secretAccessKey: 'id'
+            },
+            beta: {
+              [Country.US]: {
+                accessKeyId: 'tokenUsa',
+                secretAccessKey: 'isUsa'
+              }
+            }
+          }
+        }
+      }
+
+      const resolvedConfigalpha = buildConfigFromDefinition(config, Country.US, Brand.Alpha)
+      const resolvedConfigbeta = buildConfigFromDefinition(config, Country.US, Brand.Beta)
+
+      expect(resolvedConfigalpha).toMatchSnapshot()
+      expect(resolvedConfigbeta).toMatchSnapshot()
+    })
+
+    it('resolves config with brand default correctly', () => {
+      const config: DeepPartial<ConfigDefinition> = {
+        aws: {
+          credentials: {
+            brandDefault: {
+              accessKeyId: 'token',
+              secretAccessKey: 'id'
+            },
+            beta: {
+              [Country.US]: {
+                accessKeyId: 'tokenUsa',
+                secretAccessKey: 'isUsa'
+              }
+            }
+          }
+        }
+      }
+
+      const resolvedConfigAlpha = buildConfigFromDefinition(config, Country.US, Brand.Alpha)
+      const resolvedConfigBeta = buildConfigFromDefinition(config, Country.US, Brand.Beta)
+
+      expect(resolvedConfigAlpha).toMatchSnapshot()
+      expect(resolvedConfigBeta).toMatchSnapshot()
+    })
+
+    it('resolves config with country default correctly', () => {
+      const config: DeepPartial<ConfigDefinition> = {
+        aws: {
+          credentials: {
+            beta: {
+              countryDefault: {
+                accessKeyId: 'tokenDefault',
+                secretAccessKey: 'isDefault'
+              },
+              [Country.US]: {
+                accessKeyId: 'tokenUsa',
+                secretAccessKey: 'isUsa'
+              }
+            }
+          }
+        }
+      }
+
+      const resolvedConfigUS = buildConfigFromDefinition(config, Country.US, Brand.Beta)
+
+      const resolvedConfigTurkey = buildConfigFromDefinition(config, Country.TURKEY, Brand.Beta)
+
+      expect(resolvedConfigUS).toMatchSnapshot()
+      expect(resolvedConfigTurkey).toMatchSnapshot()
+    })
+
+    it('resolves config with country is a first filter', () => {
+      const config: DeepPartial<ConfigDefinition> = {
+        aws: {
+          region: {
+            countryDefault: 'eu-west-1',
+            [Country.US]: 'eu-west-1'
+          },
+          credentials: {
+            countryDefault: {
+              accessKeyId: 'tokenDefault',
+              secretAccessKey: 'isDefault'
+            },
+            [Country.US]: {
+              accessKeyId: 'tokenUsa',
+              secretAccessKey: 'isUsa'
+            }
+          }
+        }
+      }
+
+      const resolvedConfigUS = buildConfigFromDefinition(config, Country.US, Brand.Beta)
+
+      const resolvedConfigTurkey = buildConfigFromDefinition(config, Country.TURKEY, Brand.Beta)
+
+      expect(resolvedConfigUS).toMatchSnapshot()
+      expect(resolvedConfigTurkey).toMatchSnapshot()
+    })
+
+    it('resolves config with missing default correctly', () => {
+      const config: DeepPartial<ConfigDefinition> = {
+        isDebugMode: {
+          brandDefault: true,
+          alpha: {
+            [Country.RUSSIA]: false,
+            [Country.TURKEY]: false
+          }
+        }
+      }
+
+      const resolvedConfigUS = buildConfigFromDefinition(config, Country.US, Brand.Alpha)
+
+      const resolvedConfigTurkey = buildConfigFromDefinition(config, Country.TURKEY, Brand.Alpha)
+
+      expect(resolvedConfigUS).toMatchSnapshot()
+      expect(resolvedConfigTurkey).toMatchSnapshot()
+    })
+
+    it('resolves arrays correctly', () => {
+      const config: DeepPartial<ConfigDefinition> = {
+        aws: {
+          supportedFeatures: ['a', 'b']
+        }
+      }
+
+      const resolvedConfigalpha = buildConfigFromDefinition(config, Country.US, Brand.Alpha)
+
+      expect(resolvedConfigalpha).toMatchSnapshot()
+    })
+
+    it('resolves numbers correctly', () => {
+      const config: DeepPartial<ConfigDefinition> = {
+        aws: {
+          credentials: {
+            alpha: {
+              secretAccessKey: '8a82941762aaf2a10162aec726f3090a',
+              accessKeyId: 'OGE4Mjk0MTc2MmFhZjJhMTAxNjJhZWM2ZWFkYTA5MDZ8TjdwcHBSeFplTQ=='
+            }
+          },
+          retriesOnError: 10000
+        },
+        someExternalService: {
+          timeout: 20000
+        }
+      }
+
+      const resolvedConfigalpha = buildConfigFromDefinition(config, Country.US, Brand.Alpha)
+
+      expect(resolvedConfigalpha).toMatchSnapshot()
+    })
+
+    it('resolves deep nested params correctly', () => {
+      const config: DeepPartial<ConfigDefinition> = {
+        someExternalService: {
+          auth: {
+            alpha: {
+              [Country.US]: {
+                username: 'dummy city'
+              }
+            }
+          }
+        }
+      }
+
+      const resolvedConfigalpha = buildConfigFromDefinition(config, Country.US, Brand.Alpha)
+
+      expect(resolvedConfigalpha).toMatchSnapshot()
+    })
+  })
+
   describe('buildFeatureTogglesFromDefinitions', () => {
     it('resolves config with global value correctly', () => {
       const config: FeatureToggleEnvironmentMap = {
-        production: {
-          moduleTwo: {
-            ANOTHER_FEATURE: false
+        prod: {
+          GLOBAL_FEATURE: true,
+          moduleOne: {
+            SOME_FEATURE: false
           }
         }
       }
@@ -23,14 +194,14 @@ describe('configBuilder', () => {
         config,
         Environment.production,
         Country.US,
-        Brand.MainBrand
+        Brand.Alpha
       )
       expect(resolvedConfig).toMatchSnapshot()
     })
 
     it('merges config from other environment correctly', () => {
       const config: FeatureToggleEnvironmentMap = {
-        development: {
+        [Environment.development]: {
           moduleOne: {
             SOME_FEATURE: true
           },
@@ -38,8 +209,8 @@ describe('configBuilder', () => {
             ANOTHER_FEATURE: false
           }
         },
-        staging: {},
-        production: {
+        [Environment.staging]: {},
+        [Environment.production]: {
           moduleOne: {
             SOME_FEATURE: false
           },
@@ -53,19 +224,23 @@ describe('configBuilder', () => {
         config,
         Environment.staging,
         Country.US,
-        Brand.MainBrand
+        Brand.Alpha
       )
       expect(resolvedConfig).toMatchSnapshot()
     })
 
     it('merges partial config from other environment correctly', () => {
       const config: FeatureToggleEnvironmentMap = {
-        staging: {
+        [Environment.development]: {
           moduleOne: {
             SOME_FEATURE: true
+          },
+          moduleTwo: {
+            ANOTHER_FEATURE: false
           }
         },
-        production: {
+        [Environment.staging]: {},
+        [Environment.production]: {
           moduleOne: {
             SOME_FEATURE: false
           },
@@ -79,19 +254,19 @@ describe('configBuilder', () => {
         config,
         Environment.staging,
         Country.US,
-        Brand.MainBrand
+        Brand.Alpha
       )
       expect(resolvedConfig).toMatchSnapshot()
     })
 
     it('merges config from multiple environments correctly', () => {
       const config: FeatureToggleEnvironmentMap = {
-        staging: {
+        [Environment.staging]: {
           moduleOne: {
             SOME_FEATURE: true
           }
         },
-        production: {
+        [Environment.production]: {
           moduleTwo: {
             ANOTHER_FEATURE: true
           }
@@ -102,19 +277,19 @@ describe('configBuilder', () => {
         config,
         Environment.development,
         Country.US,
-        Brand.MainBrand
+        Brand.Alpha
       )
       expect(resolvedConfig).toMatchSnapshot()
     })
 
     it('resolves flag for multiple countries for all brands correctly', () => {
       const config: FeatureToggleEnvironmentMap = {
-        staging: {
+        [Environment.staging]: {
           moduleOne: {
             SOME_FEATURE: [Country.RUSSIA, Country.US]
           }
         },
-        production: {
+        [Environment.production]: {
           moduleTwo: {
             ANOTHER_FEATURE: true
           }
@@ -125,131 +300,62 @@ describe('configBuilder', () => {
         config,
         Environment.development,
         Country.US,
-        Brand.OtherBrand
+        Brand.Alpha
       )
 
-      const resolvedConfigRU = buildFeatureTogglesFromDefinitions(
+      const resolvedConfigTR = buildFeatureTogglesFromDefinitions(
         config,
         Environment.development,
-        Country.RUSSIA,
-        Brand.MainBrand
+        Country.TURKEY,
+        Brand.Alpha
       )
       expect(resolvedConfigUS).toMatchSnapshot()
-      expect(resolvedConfigRU).toMatchSnapshot()
+      expect(resolvedConfigTR).toMatchSnapshot()
     })
 
     it('resolves flag for multiple countries for different brands correctly', () => {
       const config: FeatureToggleEnvironmentMap = {
-        staging: {
+        stg: {
           moduleOne: {
             SOME_FEATURE: {
-              [Brand.MainBrand]: [Country.US],
-              [Brand.OtherBrand]: [Country.RUSSIA, Country.US]
+              alpha: [Country.FRANCE, Country.TURKEY],
+              beta: [Country.RUSSIA, Country.US]
             }
           }
         }
       }
 
-      const resolvedConfigMainUS = buildFeatureTogglesFromDefinitions(
+      const resolvedConfigalphaUS = buildFeatureTogglesFromDefinitions(
         config,
         Environment.development,
         Country.US,
-        Brand.MainBrand
+        Brand.Alpha
       )
 
-      const resolvedConfigMainBrandRU = buildFeatureTogglesFromDefinitions(
+      const resolvedConfigalphaTR = buildFeatureTogglesFromDefinitions(
         config,
         Environment.development,
-        Country.RUSSIA,
-        Brand.MainBrand
+        Country.TURKEY,
+        Brand.Alpha
       )
 
-      const resolvedConfigOtherBrandUS = buildFeatureTogglesFromDefinitions(
+      const resolvedConfigbetaUS = buildFeatureTogglesFromDefinitions(
         config,
         Environment.development,
         Country.US,
-        Brand.OtherBrand
+        Brand.Beta
       )
 
-      const resolvedConfigOtherBrandRU = buildFeatureTogglesFromDefinitions(
+      const resolvedConfigbetaTR = buildFeatureTogglesFromDefinitions(
         config,
         Environment.development,
-        Country.RUSSIA,
-        Brand.OtherBrand
+        Country.TURKEY,
+        Brand.Beta
       )
-      expect(resolvedConfigMainUS).toMatchSnapshot()
-      expect(resolvedConfigMainBrandRU).toMatchSnapshot()
-      expect(resolvedConfigOtherBrandUS).toMatchSnapshot()
-      expect(resolvedConfigOtherBrandRU).toMatchSnapshot()
-    })
-  })
-
-  describe('buildConfigFromDefinition', () => {
-    it('resolves config with global value correctly', () => {
-      const config: DeepPartial<ConfigDefinition> = {
-        someExternalService: {
-          baseUrl: 'https://someservice.com/services1/'
-        }
-      }
-
-      const resolvedConfig = buildConfigFromDefinition(config, Country.US, Brand.MainBrand)
-      expect(resolvedConfig).toMatchSnapshot()
-    })
-
-    it('resolves config with brand-wide global value correctly', () => {
-      const config: DeepPartial<ConfigDefinition> = {
-        someExternalService: {
-          baseUrl: {
-            [Brand.OtherBrand]: 'https://someservice.com/services1/',
-            [Brand.MainBrand]: 'https://someservice.com/services2/'
-          }
-        }
-      }
-
-      const resolvedConfig = buildConfigFromDefinition(config, Country.US, Brand.MainBrand)
-      expect(resolvedConfig).toMatchSnapshot()
-    })
-
-    it('resolves config with all brands global value correctly', () => {
-      const config: DeepPartial<ConfigDefinition> = {
-        someExternalService: {
-          baseUrl: 'https://someservice.com/services/'
-        }
-      }
-
-      const resolvedConfig = buildConfigFromDefinition(config, Country.US, Brand.MainBrand)
-      expect(resolvedConfig).toMatchSnapshot()
-    })
-
-    it('resolves config for specific country correctly', () => {
-      const config: DeepPartial<ConfigDefinition> = {
-        someExternalService: {
-          baseUrl: {
-            [Brand.OtherBrand]: 'https://someservice.com/services/',
-            [Brand.MainBrand]: {
-              [Country.US]: 'https://someservice1.com/services/',
-              [Country.RUSSIA]: 'https://someservice.2ru/services/'
-            }
-          }
-        }
-      }
-
-      const resolvedConfig = buildConfigFromDefinition(config, Country.RUSSIA, Brand.MainBrand)
-      expect(resolvedConfig).toMatchSnapshot()
-    })
-
-    it('resolves config for specific country for all brands correctly', () => {
-      const config: DeepPartial<ConfigDefinition> = {
-        someExternalService: {
-          baseUrl: {
-            [Country.US]: 'https://someservice.com/services/',
-            [Country.RUSSIA]: 'https://someservice.ru/services/'
-          }
-        }
-      }
-
-      const resolvedConfig = buildConfigFromDefinition(config, Country.RUSSIA, Brand.MainBrand)
-      expect(resolvedConfig).toMatchSnapshot()
+      expect(resolvedConfigalphaUS).toMatchSnapshot()
+      expect(resolvedConfigalphaTR).toMatchSnapshot()
+      expect(resolvedConfigbetaUS).toMatchSnapshot()
+      expect(resolvedConfigbetaTR).toMatchSnapshot()
     })
   })
 })

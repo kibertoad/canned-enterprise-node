@@ -2,27 +2,22 @@ import deepMerge from 'deepmerge'
 import memoizee from 'memoizee'
 import * as dotenv from 'dotenv'
 
-dotenv.config() // This needs to be called before we import config
-
 import {
   environmentConfig,
   defaultConfig,
   environmentFeatureToggles,
-  defaultFeatureToggles,
-  dbConfig
+  defaultFeatureToggles
 } from './config'
-import { Brand, Config, Environment, FeatureToggles } from './configInterface'
+import { Config, FeatureToggles } from './configInterface'
 import {
   buildConfigFromDefinition,
   buildFeatureTogglesFromDefinition
 } from './internal/configBuilder'
 
-const environment: Environment = (process.env.APP_ENV as Environment) || Environment.development
+import { Brand, Country, Environment } from './configTypes'
 
-// ToDo Implement env-specific config
-export function getDbConfig() {
-  return dbConfig.default
-}
+dotenv.config() // This needs to be called before we import config
+const environment: Environment = (process.env.APP_ENV as Environment) || 'dev'
 
 export const getConfig = memoizee(getConfigInternal, {
   normalizer: (args: any) => {
@@ -30,7 +25,7 @@ export const getConfig = memoizee(getConfigInternal, {
   }
 })
 
-function getConfigInternal(country: string, brand: Brand): Config {
+function getConfigInternal(country: Country, brand: Brand): Config {
   if (!Object.values(Environment).includes(environment)) {
     throw new Error(`Unknown environment: ${environment}`)
   }
@@ -52,7 +47,7 @@ export const getFeatures = memoizee(getFeaturesInternal, {
   }
 })
 
-function getFeaturesInternal(country: string, brand: Brand): FeatureToggles {
+function getFeaturesInternal(country: Country, brand: Brand): FeatureToggles {
   if (!Object.values(Environment).includes(environment)) {
     throw new Error(`Unknown environment: ${environment}`)
   }

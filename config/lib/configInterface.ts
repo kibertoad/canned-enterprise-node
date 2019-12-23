@@ -1,62 +1,59 @@
-export enum Brand {
-  MainBrand = 'mainbrand',
-  OtherBrand = 'otherbrand'
-}
+import {
+  BooleanParam,
+  Environment,
+  NestedRecordParam,
+  NumberParam,
+  StringArrayParam,
+  StringParam
+} from './configTypes'
 
-export enum Country {
-  US = 'US',
-  RUSSIA = 'RU'
-}
-
+// Interface for consumption of fully resolved config from chkapi implementation
 export interface Config {
   aws: {
-    accessKeyId: string
-    secretAccessKey: string
+    credentials: {
+      accessKeyId: string
+      secretAccessKey: string
+    }
     region: string
+    supportedFeatures: string[]
+    retriesOnError: number
   }
   someExternalService: {
-    baseUrl: string
+    region: string
     auth: {
       username: string
       password: string
     }
     callTimeout: number
   }
+  isDebugMode: boolean
 }
 
+// Interface for defining all possible configs with optional grouping by brands/countries
 export interface ConfigDefinition {
   aws: {
-    accessKeyId: StringParam
-    secretAccessKey: StringParam
+    credentials: NestedRecordParam<{
+      accessKeyId: StringParam
+      secretAccessKey: StringParam
+    }>
     region: StringParam
+    supportedFeatures: StringArrayParam
+    retriesOnError: NumberParam
   }
   someExternalService: {
-    baseUrl: StringParam
-    auth: {
+    region: StringParam
+    auth: NestedRecordParam<{
       username: StringParam
       password: StringParam
-    }
-    callTimeout: NumberParam
+    }>
+    timeout: NumberParam
   }
+  isDebugMode: BooleanParam
 }
 
 export type ConfigDefinitionMap = DeepPartial<
   { [key in Environment | 'default']: ConfigDefinition }
 >
-
-type StringParam =
-  | string
-  | { [key in Brand]: string | { [key in Country]: string } }
-  | { [key in Country]: string }
-type BooleanParam = boolean | { [key in Brand]: boolean | { [key in Country]: boolean } | string[] }
-type NumberParam = number | { [key in Brand]: number | { [key in Country]: number } | number[] }
-
-export enum Environment {
-  production = 'production',
-  staging = 'staging',
-  test = 'test',
-  development = 'development'
-}
 
 export interface FeatureToggles {
   moduleOne: {
