@@ -1,33 +1,35 @@
 import { GotOptions, HTTPError, ResponseType } from 'got'
 import * as got from 'got'
 import defaultGot from 'got'
-import { OptionsOfDefaultResponseBody } from 'got/dist/source/create'
 import * as http from 'http'
 import * as https from 'https'
 import { labelValues } from 'prom-client'
 import { httpRequestCounter, httpRequestDurationSeconds } from './httpMetrics'
-import { roundProperties, stripCredentialsFromUrl } from './httpUtils'
 
 import { initKeepAliveAgent } from './initKeepAliveAgent'
+import * as httpNode from 'http'
+import CacheableRequest from 'cacheable-request'
+import { Readable as ReadableStream } from 'stream'
+import { roundProperties } from './httpUtils'
+
 // The timeout value is an educated guess because there is no correct answer.
 // Some requests probably can use a higher value.
 const DEFAULT_FREE_SOCKET_TIMEOUT = 4500
 const getDefaultKeepAliveAgent = initKeepAliveAgent(DEFAULT_FREE_SOCKET_TIMEOUT)
 
-const defaultHeaders = {
-  'user-agent': 'MicroserviceX/1.0'
-}
-
-const defaultOptions: Partial<OptionsOfDefaultResponseBody> = {
+const defaultOptions: Partial<GotOptions> = {
   encoding: 'utf8'
 }
 
-export type HttpOptions = {
+export type HttpClientOptions = {
   requestId?: string
   locale?: string
   requestName?: string
   serviceName?: string
-
+  timeout?: number
+  returnErrors?: boolean
+  gzip?: boolean
+  cache?: string | CacheableRequest.StorageAdapter | false
   responseType?: ResponseType
   retry?: number
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
@@ -38,22 +40,26 @@ export type HttpOptions = {
 }
 
 type HttpOptionsInternal = {
-  json?: Record<string, any> | Record<string, any>[]
+  formBody?: Record<string, any>
+  body?: string | Buffer | ReadableStream
+  json?: Record<string, any> | Record<string, any>[] | undefined
   url: string
-} & HttpOptions
+} & HttpClientOptions
 
 export declare type ResponseBody = Buffer | string | object
 
 export class HttpClient {
   private readonly got: got.Got
+  private defaults: Partial<HttpClientOptions>
 
-  constructor(gotInstance: got.Got = defaultGot) {
+  constructor(gotInstance: got.Got = defaultGot, defaults: Partial<HttpClientOptions> = {}) {
     this.got = gotInstance
+    this.defaults = defaults
   }
 
-  async get<T extends ResponseBody>(
+  async get<T extends ResponseBody = Record<string, any>>(
     url: string,
-    options: HttpOptions = {}
+    options: HttpClientOptions = {}
   ): Promise<got.Response<T>> {
     const response: got.Response<T> = await execute(this.got, {
       url,
@@ -64,54 +70,69 @@ export class HttpClient {
     return response
   }
 
-  async post<T extends ResponseBody>(
+  async post<T extends ResponseBody = Record<string, any>>(
     url: string,
-    body: Record<string, any> | Record<string, any>[],
-    options: HttpOptions = {}
+    body: Record<string, any> | Record<string, any>[] | string | undefined,
+    options: HttpClientOptions = {}
   ): Promise<got.Response<T>> {
     const response: got.Response<T> = await execute(this.got, {
       url,
       responseType: 'json',
       ...options,
-      json: body,
+      ...mapRequestBody(body),
       method: 'POST'
     })
     return response
   }
 
-  async patch<T extends ResponseBody>(
+  async postForm<T extends ResponseBody = Record<string, any>>(
     url: string,
-    body: Record<string, any>,
-    options: HttpOptions = {}
+    formBody: Record<string, any>,
+    options: HttpClientOptions = {}
   ): Promise<got.Response<T>> {
     const response: got.Response<T> = await execute(this.got, {
       url,
       responseType: 'json',
       ...options,
-      json: body,
+      formBody,
+      method: 'POST'
+    })
+    return response
+  }
+
+  async patch<T extends ResponseBody = Record<string, any>>(
+    url: string,
+    body: Record<string, any>,
+    options: HttpClientOptions = {}
+  ): Promise<got.Response<T>> {
+    const response: got.Response<T> = await execute(this.got, {
+      url,
+      responseType: 'json',
+      ...options,
+      ...mapRequestBody(body),
       method: 'PATCH'
     })
     return response
   }
 
-  async put<T extends ResponseBody>(
+  async put<T extends ResponseBody = Record<string, any>>(
     url: string,
     body: Record<string, any>,
-    options: HttpOptions = {}
+    options: HttpClientOptions = {}
   ): Promise<got.Response<T>> {
     const response: got.Response<T> = await execute(this.got, {
       url,
       responseType: 'json',
       ...options,
-      json: body,
+      ...mapRequestBody(body),
       method: 'PUT'
     })
     return response
   }
 
-  async delete<T extends ResponseBody>(
+  async delete<T extends ResponseBody = Record<string, any>>(
     url: string,
-    options: HttpOptions = {}
+    options: HttpClientOptions = {}
   ): Promise<got.Response<T>> {
     const response: got.Response<T> = await execute(this.got, {
       url,
@@ -123,14 +144,17 @@ export class HttpClient {
   }
 }
 
-function initHeaders(requestOptions: Partial<HttpOptions> = {}): http.IncomingHttpHeaders {
+function initHeaders(
+  requestOptions: Partial<HttpClientOptions> = {}
+): httpNode.IncomingHttpHeaders {
   const requestHeaders = requestOptions.requestId
     ? { 'X-Request-ID': requestOptions.requestId }
     : {}
 
   return {
-    ...defaultHeaders,
-    ...requestHeaders
+    ...requestHeaders,
+    ...requestOptions.headers,
+    Authorization: requestOptions.headers?.['Authorization'] ?? undefined
   }
 }
 
@@ -140,18 +164,30 @@ declare type ResolvedOptions = {
 
 function mapOptions(options: Partial<HttpOptionsInternal>): ResolvedOptions {
   const resolvedOptions: ResolvedOptions = {
+    timeout: options.timeout ?? undefined,
+    decompress: options.gzip ?? true,
     retry: options.retry ?? 0,
     prefixUrl: options.baseUrl,
     responseType: options.responseType,
-    method: options.method
+    method: options.method,
+    cache: options.cache
   }
 
   if (options.qs) {
-    resolvedOptions.searchParams = options.qs
+    resolvedOptions.searchParams = removeUndefinedValues(options.qs)
+    if (Object.keys(resolvedOptions.searchParams).length === 0) {
+      resolvedOptions.searchParams = undefined
+    }
   }
 
   if (options.json) {
     resolvedOptions.json = options.json
+  }
+  if (options.body) {
+    resolvedOptions.body = options.body
+  }
+  if (options.formBody) {
+    resolvedOptions.form = options.formBody
   }
   return resolvedOptions
 }
@@ -163,10 +199,11 @@ function initOptions(options: HttpOptionsInternal): GotOptions {
   const headers = initHeaders(options)
 
   console.debug('HTTP request', {
+    locale: options.locale,
     requestId: options.requestId,
     method: options.method,
     headers,
-    url: stripCredentialsFromUrl(options.url)
+    url: options.url
   })
 
   return {
@@ -214,11 +251,12 @@ async function execute<T extends ResponseBody>(
       )
     }
 
-    console.debug('HTTP response', {
-      method: resolvedOptions.method,
-      url: stripCredentialsFromUrl(response.url),
-      status: response.statusCode,
+    console.info('HTTP response', {
+      locale: options.locale,
       requestId: options.requestId,
+      method: resolvedOptions.method,
+      url: response.url,
+      status: response.statusCode,
       duration: duration ?? undefined,
       timingPhases: roundProperties(response.timings)
     })
@@ -227,6 +265,12 @@ async function execute<T extends ResponseBody>(
   } catch (err) {
     if (err instanceof HTTPError) {
       const { code, message, response } = err
+      // @ts-ignore
+      err['statusCode'] = err.response.statusCode
+      // @ts-ignore
+      err['error'] = err.response.statusMessage
+      // @ts-ignore
+      err['body'] = err.response.body
       // The server responded with a status codes other than 2xx.
       // Check reason.statusCode
       if (trackMetrics) {
@@ -242,14 +286,18 @@ async function execute<T extends ResponseBody>(
 
       const href = response.request && response.url
       console.warn('HTTP StatusCodeError', err, {
+        locale: options.locale,
+        requestId: options.requestId,
         method: options.method,
         statusCode: code,
-        requestId: options.requestId,
-        url: stripCredentialsFromUrl(href),
+        url: href,
         errMsg: message || ''
       })
 
-      throw err
+      if (!options.returnErrors) {
+        throw err
+      }
+      return err.response as any
     }
 
     // The request failed due to technical reasons.
@@ -266,19 +314,58 @@ async function execute<T extends ResponseBody>(
     }
 
     console.warn('HTTP RequestError', err, {
-      method: options.method,
+      locale: options.locale,
       requestId: options.requestId,
-      url: stripCredentialsFromUrl(options.url),
-      errMsg: err.message,
-      code: err.code,
-      errStack: err.stack
+      method: options.method,
+      url: options.url,
+      code: err.code
     })
     throw err
   }
 }
 
-export function withDefaults(optionDefaults: Partial<HttpOptions>): HttpClient {
-  return new HttpClient(defaultGot.extend(mapOptions(optionDefaults)))
+export function withDefaults(optionDefaults: Partial<HttpClientOptions>): HttpClient {
+  return new HttpClient(
+    defaultGot.extend({
+      ...mapOptions(optionDefaults),
+      headers: initHeaders(optionDefaults),
+      searchParams: optionDefaults.qs
+    }),
+    optionDefaults
+  )
+}
+
+function isString(x: any): x is string {
+  return typeof x === 'string'
+}
+
+function isObject(x: any): x is object {
+  return typeof x === 'object'
+}
+
+function mapRequestBody(
+  body: Record<string, any> | Record<string, any>[] | string | undefined
+): { json: any } | { body: any } | {} {
+  if (isObject(body)) {
+    return {
+      json: removeUndefinedValues(body)
+    }
+  }
+  if (isString(body)) {
+    return {
+      body
+    }
+  }
+  return {}
+}
+
+function removeUndefinedValues(sourceObject: Record<string, any>): Record<string, any> {
+  return Object.entries(sourceObject).reduce((acc, [key, value]) => {
+    if (value !== undefined) {
+      acc[key] = value
+    }
+    return acc
+  }, {} as Record<string, any>)
 }
 
 export const httpClient = new HttpClient()
