@@ -12,7 +12,9 @@ import {
   BRAND_DEFAULT_FILTER,
   Environment,
   COUNTRY_DEFAULT_FILTER,
-  Brand
+  Brand,
+  CONFIG_FINAL_VALUE,
+  ConfigValueProducer
 } from '../configTypes'
 
 export function buildFeatureTogglesFromDefinitions(
@@ -94,13 +96,18 @@ function getBranchRelevance(
     return parentNode[country] === undefined ? Relevance.IS_FILTER : Relevance.IRRELEVANT
   }
 
+  if (key === CONFIG_FINAL_VALUE) {
+    return Relevance.IS_FINAL_VALUE
+  }
+
   return Relevance.IS_VALUE
 }
 
 export enum Relevance {
   IRRELEVANT,
   IS_FILTER,
-  IS_VALUE
+  IS_VALUE,
+  IS_FINAL_VALUE
 }
 
 function setConfigField(
@@ -159,17 +166,24 @@ function processConfigNode<T extends Config | FeatureToggles>(
   brand: Brand,
   resultIsBoolean: boolean
 ): T {
-  let isLeafNode = true
+  let isEmptyLeafNode = true
 
   Object.entries(sourceValue).forEach(([key, value]) => {
     const relevance = getBranchRelevance(key, country, brand, sourceValue)
     if (relevance === Relevance.IRRELEVANT) {
       return
     }
-    isLeafNode = false
+    isEmptyLeafNode = false
 
-    // Process primitive values
-    if (typeof value !== 'object') {
+    // Handle value providers
+    if (typeof value === 'function') {
+      const resolvedValue = (value as ConfigValueProducer<any>)(brand, country)
+      setConfigField(targetConfig, parentKey, key, resolvedValue, relevance)
+      return
+    }
+
+    // Process primitive and explicitly final values
+    if (typeof value !== 'object' || relevance === Relevance.IS_FINAL_VALUE) {
       setConfigField(targetConfig, parentKey, key, value, relevance)
       return
     }
@@ -195,7 +209,7 @@ function processConfigNode<T extends Config | FeatureToggles>(
       initChildren(targetConfig, key, parentKey)
 
       if (parentKey) {
-        nextTargetConfig = (targetConfig as any)[parentKey]
+        nextTargetConfig = targetConfig[parentKey]
       }
 
       // We need to store last non-filter key to correctly handle cases with filters, so that we known correctly where to attach next resolved non-filter value
@@ -206,7 +220,7 @@ function processConfigNode<T extends Config | FeatureToggles>(
   })
 
   // If node has no children and there is no value resolved for him, it should be undefined, not an empty object (that would be set via initChildren previously)
-  if (isLeafNode && parentKey) {
+  if (isEmptyLeafNode && parentKey) {
     setConfigField(targetConfig, parentKey, '', undefined, Relevance.IS_FILTER)
   }
 

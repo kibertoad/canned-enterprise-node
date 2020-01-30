@@ -37,8 +37,10 @@ function getConfigInternal(country: Country, brand: Brand): Config {
   }
 
   const builtConfig = buildConfigFromDefinition(environmentDefinition, country, brand)
+  // Avoid overriding default values with undefined values in environmental configs.
+  const prunedConfig = JSON.parse(JSON.stringify(builtConfig))
 
-  return deepMerge(builtDefaultConfig, builtConfig)
+  return deepMerge(builtDefaultConfig, prunedConfig)
 }
 
 export const getFeatures = memoizee(getFeaturesInternal, {
