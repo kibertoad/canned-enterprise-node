@@ -40,7 +40,7 @@ exports[`logger Supports setting requestId in childLogger 1`] = `
 `;
 
 exports[`logger logs DEBUG level entry with context data 1`] = `
-"[2011-10-05 14:48:00.000 +0000] [34mDEBUG[39m: [36mRequest-header validation passed.[39m
+"[2011-10-05 14:48:00.000 +0000] [94mDEBUG[39m: [36mRequest-header validation passed.[39m
     originalHost: \\"localhost\\"
     requestId: \\"dummyId\\"
 "

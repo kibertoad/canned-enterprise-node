@@ -12,17 +12,17 @@
   "scripts": {
     "test": "jest --config=jest.config.json",
     "test:coverage": "jest --config=jest.config.json --coverage",
-    "test:ci": "npm run eslint && npm run test:coverage",
-    "eslint": "eslint --format codeframe \"lib/**/*.js\" \"test/**/*.js\"",
+    "test:ci": "npm run lint && npm run test:coverage",
+    "lint": "eslint --format codeframe \"lib/**/*.js\" \"test/**/*.js\"",
     "prettier": "prettier --write \"{lib,test}/**/*.{js,ts}\" index.js"
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^6.5.1",
-    "eslint-config-prettier": "^6.4.0",
-    "eslint-plugin-prettier": "^3.1.1",
-    "jest": "^24.9.0",
-    "prettier": "^1.18.2"
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1"
   },
   "jest": {
     "collectCoverage": true,
