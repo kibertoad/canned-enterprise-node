@@ -1,0 +1,37 @@
+{
+  "name": "fastify-service-template",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --config=jest.config.json",
+    "test:coverage": "jest --config=jest.config.json --coverage",
+    "test:ci": "npm run lint && npm run test:coverage",
+    "lint": "eslint --format codeframe \"src/**/*.ts\" \"test/**/*.ts\"",
+    "prettier": "prettier --write \\\"{src,test}/**/*.{js,ts}\\\" src/app.ts",
+    "start:dev": "ts-node src/server.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "fastify": "2.13.0",
+    "fastify-cors": "^3.0.2",
+    "fastify-healthcheck": "^2.1.0",
+    "fastify-helmet": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.1.4",
+    "@types/node": "^12.12.30",
+    "@typescript-eslint/eslint-plugin": "^2.24.0",
+    "@typescript-eslint/parser": "^2.24.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^25.1.0",
+    "nock": "^12.0.3",
+    "nockback-harder": "^5.0.0",
+    "prettier": "^1.19.1",
+    "swagger-combinator": "^1.0.1",
+    "ts-jest": "^25.2.1",
+    "ts-node": "^8.7.0",
+    "typescript": "3.8.3"
+  }
+}
