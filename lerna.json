@@ -1,6 +1,7 @@
 {
   "packages": [
     "config",
+    "fastify-service-template",
     "http",
     "javascript-template",
     "koa-service-template",
