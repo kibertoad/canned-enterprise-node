@@ -25,3 +25,7 @@ function getApp(): Application {
 
   return app
 }
+
+module.exports = {
+  getApp
+}

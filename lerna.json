@@ -1,0 +1,12 @@
+{
+  "packages": [
+    "config",
+    "http",
+    "javascript-template",
+    "koa-service-template",
+    "logging",
+    "snippets",
+    "typescript-template"
+  ],
+  "version": "independent"
+}
