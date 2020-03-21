@@ -47,4 +47,3 @@ workflows:
     jobs:
       - node-v10
       - node-v12
-      - node-v13
