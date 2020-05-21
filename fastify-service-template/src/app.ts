@@ -7,6 +7,7 @@ const healthCheck = require('fastify-healthcheck')
 export async function getApp(): Promise<fastify.FastifyInstance> {
   const app = fastify({ logger: true })
 
+  await app.register(require('middie'))
   app.register(fastifyHelmet)
   app.register(healthCheck)
 
@@ -14,7 +15,7 @@ export async function getApp(): Promise<fastify.FastifyInstance> {
     methods: ['GET', 'POST'],
     credentials: false,
     maxAge: 86400,
-    origin: []
+    origin: [],
   })
 
   try {
