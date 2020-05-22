@@ -1,13 +1,20 @@
-import fastify from 'fastify'
+import http from 'http'
+import pino from 'pino'
+import fastify, { FastifyInstance } from 'fastify'
 import fastifyHelmet from 'fastify-helmet'
 import fastifyCors from 'fastify-cors'
+import middie from 'middie'
 
 const healthCheck = require('fastify-healthcheck')
 
-export async function getApp(): Promise<fastify.FastifyInstance> {
-  const app = fastify({ logger: true })
+export async function getApp(): Promise<
+  FastifyInstance<http.Server, http.IncomingMessage, http.ServerResponse, pino.Logger>
+> {
+  const app = fastify<http.Server, http.IncomingMessage, http.ServerResponse, pino.Logger>({
+    logger: true,
+  })
 
-  await app.register(require('middie'))
+  await app.register(middie)
   app.register(fastifyHelmet)
   app.register(healthCheck)
 

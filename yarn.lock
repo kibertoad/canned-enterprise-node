@@ -2353,7 +2353,7 @@ atomic-sleep@^1.0.0:
   resolved "https://registry.yarnpkg.com/atomic-sleep/-/atomic-sleep-1.0.0.tgz#eb85b77a601fc932cfe432c5acd364a9e2c9075b"
   integrity sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==
 
-avvio@^7.0.1:
+avvio@^7.0.3:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/avvio/-/avvio-7.0.3.tgz#937c240973f49dff66acf5e72dd756ae87430209"
   integrity sha512-JmGyv7ylCG7TA0Lpb3nHdsVzbmX52co62KT7d/nulcatLD2k9hJbWj6bIfkisEmdpUqmguUHY81Rx/O0iWy3JA==
@@ -4200,14 +4200,14 @@ fastify-plugin@^2.0.0:
   dependencies:
     semver "^7.3.2"
 
-fastify@^3.0.0-rc.2:
-  version "3.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/fastify/-/fastify-3.0.0-rc.2.tgz#e89ee3561d69b4b35cbf237374dbf3ee50319355"
-  integrity sha512-sa6QGsvFyp0bfHOURQIDeNt8BBTm7r3Lwo2/VsBIH1lkTDlNBf4eLEwKBc1BldE6z6+mO9sGs1YuOqa8uu1e7A==
+fastify@^3.0.0-rc.3:
+  version "3.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-3.0.0-rc.3.tgz#aabdb007bcdd6dc91bc87be64b6ef2b4f718fe50"
+  integrity sha512-mmx/NO5OgmJhBA7MBUuIm5qQz8T+pZoqfIM1sZztw6PIQn4BKzN/7G6gzC/viw0mSxwMOkVbwuFFfSwq2gVaEg==
   dependencies:
     abstract-logging "^2.0.0"
     ajv "^6.12.2"
-    avvio "^7.0.1"
+    avvio "^7.0.3"
     fast-json-stringify "^2.0.0"
     find-my-way "^3.0.0"
     flatstr "^1.0.12"
@@ -6883,6 +6883,15 @@ middie@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/middie/-/middie-5.0.0.tgz#6c0658c665b9eaf9fa2510351c3a2df1d92b7267"
   integrity sha512-T3Hbq3uJqihVc2C2N8c/cp9THTakT11FfT0BJnfEr3rAKe2UD8qDdE5nBCfQ5ec9Pmaxmv/FTcsWHusp66CsnA==
+  dependencies:
+    fastify-plugin "^2.0.0"
+    path-to-regexp "^6.1.0"
+    reusify "^1.0.4"
+
+middie@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/middie/-/middie-5.1.0.tgz#c7b132c8569bc0cedac7dbb52a8a4338aef20fe2"
+  integrity sha512-pM9KMIedHAOHIw+wsJbze7QiPdEfPsd3iMhgStvYlpme6/dEpCVp0pTSDP5bXa1NvrPmjfWOpvp2RNbypH8DHQ==
   dependencies:
     fastify-plugin "^2.0.0"
     path-to-regexp "^6.1.0"
