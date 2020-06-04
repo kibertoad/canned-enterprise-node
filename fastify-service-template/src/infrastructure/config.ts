@@ -13,7 +13,7 @@ export function getAwsConfig() {
     accessKeyId: env['AWS_ACCESS_KEY_ID'],
     secretAccessKey: env['AWS_SECRET_ACCESS_KEY_ID'],
     endpoint: env['AWS_ENDPOINT'],
-    bucket: getMandatory('AWS_BUCKET_NAME')
+    bucket: getMandatory('AWS_BUCKET_NAME'),
   }
 }
 
@@ -34,6 +34,10 @@ function getOptional(param: string, defaultValue: string): string {
 
 function getOptionalBoolean(param: string, defaultValue: boolean): boolean {
   return env[param]?.toLowerCase() === 'true' ?? defaultValue
+}
+
+function getOptionalInteger(param: string, defaultValue: number): number {
+  return env[param] ? Number.parseInt(env[param]!) : defaultValue
 }
 
 export function isProduction() {
