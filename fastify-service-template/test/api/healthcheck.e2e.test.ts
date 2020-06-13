@@ -1,8 +1,8 @@
 import { getApp } from '../../src/app'
-import fastify from 'fastify'
+import fastify, { FastifyInstance } from 'fastify'
 
 describe('healthcheck', () => {
-  let app: fastify.FastifyInstance
+  let app: FastifyInstance
   beforeEach(async () => {
     app = await getApp()
   })
@@ -13,7 +13,7 @@ describe('healthcheck', () => {
 
   it('Returns health check information', async () => {
     // @ts-ignore
-    const response = await app.inject().get('/health')
+    const response = await app.inject().get('/health').end()
 
     expect(response.statusCode).toEqual(200)
     expect(response.json()).toMatchSnapshot()

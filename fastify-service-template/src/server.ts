@@ -6,7 +6,7 @@ async function start() {
   const app = await getApp()
 
   try {
-    await app.listen({ port: APP_PORT })
+    await app.listen(APP_PORT)
   } catch (err) {
     app.log.error(err)
     process.exit(1)
