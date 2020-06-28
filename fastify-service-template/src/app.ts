@@ -11,7 +11,7 @@ export async function getApp(): Promise<
   FastifyInstance<http.Server, http.IncomingMessage, http.ServerResponse, pino.Logger>
 > {
   const app = fastify<http.Server, http.IncomingMessage, http.ServerResponse, pino.Logger>({
-    logger: true,
+    logger: true
   })
 
   await app.register(middie)
@@ -22,7 +22,7 @@ export async function getApp(): Promise<
     methods: ['GET', 'POST'],
     credentials: false,
     maxAge: 86400,
-    origin: [],
+    origin: []
   })
 
   try {

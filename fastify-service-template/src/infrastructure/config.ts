@@ -13,7 +13,7 @@ export function getAwsConfig() {
     accessKeyId: env['AWS_ACCESS_KEY_ID'],
     secretAccessKey: env['AWS_SECRET_ACCESS_KEY_ID'],
     endpoint: env['AWS_ENDPOINT'],
-    bucket: getMandatory('AWS_BUCKET_NAME'),
+    bucket: getMandatory('AWS_BUCKET_NAME')
   }
 }
 
