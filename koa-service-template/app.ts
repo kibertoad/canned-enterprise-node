@@ -27,5 +27,5 @@ function getApp(): Application {
 }
 
 module.exports = {
-  getApp
+  getApp,
 }
