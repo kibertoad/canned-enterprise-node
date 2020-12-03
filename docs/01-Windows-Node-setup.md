@@ -9,7 +9,7 @@
 
 ## Building native modules
 
-* Whenever possible, use Node.js version 10.12.0 or newer to avoid the hassle of manually installing all the prerequisites for building native modules. Newer versions provide an option to install all necessary dependencies using Chocolatey for you during Node.js installation.
+* Whenever possible, use Node.js version 10.12.0 or newer .msi installer in order to avoid the hassle of manually installing all the prerequisites for building native modules. Newer versions provide an option to install all necessary dependencies using Chocolatey for you during Node.js installation (see https://github.com/nodejs/node/pull/22645)
 
 ## Node version management
 
