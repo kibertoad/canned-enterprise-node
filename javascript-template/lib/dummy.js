@@ -1,7 +1,3 @@
-function dummy() {
+export function dummy() {
   console.log('hi')
-}
-
-module.exports = {
-  dummy
 }

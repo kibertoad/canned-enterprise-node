@@ -1,20 +1,20 @@
 {
-  "moduleFileExtensions": [
-    "js",
-    "json"
-  ],
-  "testMatch": [
-    "<rootDir>/test/**/*.(spec|test).js|jsx"
-  ],
+  "moduleFileExtensions": ["js", "json"],
+  "testMatch": ["<rootDir>/test/**/*.(spec|test).js"],
   "testEnvironment": "node",
-  "reporters": [ "default" ],
-  "coveragePathIgnorePatterns": [
-    "<rootDir>/node_modules/",
-    "<rootDir>/coverage/"
-  ],
+  "reporters": ["default"],
+  "coveragePathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/coverage/"],
   "globals": {
     "ts-jest": {
       "diagnostics": false
+    }
+  },
+  "coverageThreshold": {
+    "global": {
+      "statements": 75,
+      "branches": 75,
+      "functions": 75,
+      "lines": 75
     }
   }
 }

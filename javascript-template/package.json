@@ -2,6 +2,7 @@
   "name": "javascript-template",
   "version": "1.0.0",
   "license": "MIT",
+  "description": "Template",
   "maintainers": [
     {
       "name": "Igor Savin",
@@ -10,6 +11,8 @@
   ],
   "main": "index.js",
   "scripts": {
+    "install-node": "nvm install 15.5.1 && nvm install 14.15.4",
+    "use-node-15": "nvm use 15.5.1",
     "test": "jest --config=jest.config.json",
     "test:coverage": "jest --config=jest.config.json --coverage",
     "test:ci": "npm run lint && npm run test:coverage",
@@ -18,22 +21,13 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "jest": "^25.1.0",
-    "prettier": "^1.19.1"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "coverageThreshold": {
-      "global": {
-        "statements": 85,
-        "branches": 75,
-        "functions": 90,
-        "lines": 85
-      }
-    }
+    "@babel/preset-env":"^7.12.11",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.17.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1"
   },
   "homepage": "http://github.com/kibertoad/canned-enterprise-node",
   "repository": {
@@ -47,5 +41,6 @@
   "files": [
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "type": "module"
 }

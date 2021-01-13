@@ -1,4 +1,4 @@
-const { dummy } = require('./lib/dummy')
+const { dummy } = require('./lib/dummy.js')
 
 module.exports = {
   dummy
