@@ -3,7 +3,6 @@ import pino from 'pino'
 import fastify, { FastifyInstance } from 'fastify'
 import fastifyHelmet from 'fastify-helmet'
 import fastifyCors from 'fastify-cors'
-import middie from 'middie'
 
 const healthCheck = require('fastify-healthcheck')
 
@@ -14,7 +13,6 @@ export async function getApp(): Promise<
     logger: true
   })
 
-  await app.register(middie)
   app.register(fastifyHelmet)
   app.register(healthCheck)
 

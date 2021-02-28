@@ -1,5 +1,5 @@
 import { getApp } from '../../src/app'
-import fastify, { FastifyInstance } from 'fastify'
+import { FastifyInstance } from 'fastify'
 
 describe('healthcheck', () => {
   let app: FastifyInstance
@@ -12,7 +12,6 @@ describe('healthcheck', () => {
   })
 
   it('Returns health check information', async () => {
-    // @ts-ignore
     const response = await app
       .inject()
       .get('/health')
