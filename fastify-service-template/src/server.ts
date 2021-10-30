@@ -1,14 +1,15 @@
 import { getApp } from './app'
+import { getConfig } from './infrastructure/config'
 
-const APP_PORT = process.env.APP_PORT ? Number.parseInt(process.env.APP_PORT) : 3000
+const config = getConfig()
 
 async function start() {
   const app = await getApp()
 
   try {
-    await app.listen(APP_PORT)
-  } catch (err) {
-    app.log.error(err)
+    await app.listen(config.app.port, config.app.bindAddress)
+  } catch (err: any) {
+    app.log.error(err.message)
     process.exit(1)
   }
 }

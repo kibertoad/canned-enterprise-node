@@ -12,10 +12,7 @@ describe('healthcheck', () => {
   })
 
   it('Returns health check information', async () => {
-    const response = await app
-      .inject()
-      .get('/health')
-      .end()
+    const response = await app.inject().get('/health').end()
 
     expect(response.statusCode).toEqual(200)
     expect(response.json()).toMatchSnapshot()
