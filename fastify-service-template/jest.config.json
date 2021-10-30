@@ -5,8 +5,10 @@
     "json"
   ],
   "testMatch": [
+    "<rootDir>/src/**/*.(spec|test).ts|tsx",
     "<rootDir>/test/**/*.(spec|test).ts|tsx"
   ],
+
   "transform": {
     "^.+\\.ts$": "ts-jest"
   },
