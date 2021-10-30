@@ -63,18 +63,6 @@ function getMandatory(param: string): string {
   return env[param]!
 }
 
-function getOptional(param: string, defaultValue: string): string {
-  return env[param] ?? defaultValue
-}
-
-function getOptionalBoolean(param: string, defaultValue: boolean): boolean {
-  return env[param]?.toLowerCase() === 'true' ?? defaultValue
-}
-
-function getOptionalInteger(param: string, defaultValue: number): number {
-  return env[param] ? Number.parseInt(env[param]!) : defaultValue
-}
-
 function getOptionalNullable(param: string, defaultValue: string | null): string | null {
   return env[param] ?? defaultValue
 }
